@@ -1,5 +1,5 @@
 {
-    "name": "rear gunner prototype",
+    "name": "rear gunner",
     "description": "",
     "dependencies": {
         "device": "*",
@@ -21,7 +21,7 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "blocksprj",
+    "preferredEditor": "tsprj",
     "palette": [
         "#000000",
         "#FFFFFF",

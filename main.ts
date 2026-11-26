@@ -447,7 +447,7 @@ function renderCarrier () {
     }
     sx3 = point[0]
     sy3 = point[1]
-    s = Math.min(2, 900 / point[2])
+    s = Math.min(2, 900 / point[2] * (focalLength / normalZoom))
     fillQuad(sx3 - 48 * s, sy3, sx3 + 48 * s, sy3, sx3 + 38 * s, sy3 + 9 * s, sx3 - 38 * s, sy3 + 9 * s, 3)
     fillQuad(sx3 - 52 * s, sy3, sx3 - 39 * s, sy3 - 10 * s, sx3 + 39 * s, sy3 - 10 * s, sx3 + 52 * s, sy3, 11)
     terrain.drawLine(Math.round(sx3 - 52 * s), Math.round(sy3), Math.round(sx3 + 52 * s), Math.round(sy3), 10)
@@ -548,7 +548,7 @@ function renderEnemies () {
             enemyScreenX = 120 + projectedX2
             enemyScreenY = 90 + projectedY2
             enemyScreenY += tilt * projectedX2 / 120
-            enemyScale = enemySize / enemyDepth * 3
+            enemyScale = enemySize / enemyDepth * 3 * (focalLength / normalZoom)
             enemyScale = Math.min(3, enemyScale)
             hitWidth = enemyImage.width * enemyScale / 2
             hitHeight = enemyImage.height * enemyScale / 2
@@ -574,6 +574,16 @@ if (enemyHealth[hitEnemy] <= 0) {
         }
     }
 }
+browserEvents.R.onEvent(browserEvents.KeyEvent.Pressed, function () {
+    cameraYaw = 0
+    cameraPitch = 0
+    cameraVelocityX = 0
+    cameraVelocityY = 0
+    mouseDeltaX = 0
+    mouseDeltaY = 0
+    mouseInitialized = false
+    updown = 0
+})
 function renderGuns () {
     gx = gunSwayX
     gy = gunSwayY + gunRecoil
@@ -727,7 +737,7 @@ if (cloudZ[cloudIndex2] > 2200) {
             cloudScreenX = 120 + projectedX
             cloudScreenY = 90 + projectedY
             cloudScreenY += tilt * projectedX / 120
-            cloudScale = cloudSize[cloudIndex2] / cloudDepth * 3
+            cloudScale = cloudSize[cloudIndex2] / cloudDepth * 3 * (focalLength / normalZoom)
             cloudScale = Math.min(3, cloudScale)
             if (cloudScreenX > -100 && cloudScreenX < 340 && cloudScreenY > -50 && cloudScreenY < 230) {
                 drawScaledCloud(cloudScreenX, cloudScreenY, cloudScale)
@@ -838,34 +848,35 @@ function renderBombMessage () {
     }
 }
 function renderAircraftBody () {
+    bodyZoom = focalLength / normalZoom
     ox = (0 - cameraYaw) * tailMovementX
     oy = cameraPitch * tailMovementY
-    fillQuad(70 + ox, 180 + oy, 170 + ox, 180 + oy, 235 + ox, 280 + oy, 5 + ox, 280 + oy, 6)
-    fillQuad(70 + ox, 180 + oy, 91 + ox, 180 + oy, 48 + ox, 280 + oy, 5 + ox, 280 + oy, 11)
-    fillQuad(149 + ox, 180 + oy, 170 + ox, 180 + oy, 235 + ox, 280 + oy, 192 + ox, 280 + oy, 10)
-    fillQuad(91 + ox, 187 + oy, 149 + ox, 187 + oy, 187 + ox, 280 + oy, 53 + ox, 280 + oy, 3)
-    fillQuad(104 + ox, 194 + oy, 136 + ox, 194 + oy, 152 + ox, 239 + oy, 88 + ox, 239 + oy, 10)
-    terrain.drawLine(91 + ox, 187 + oy, 53 + ox, 280 + oy, 11)
-    terrain.drawLine(149 + ox, 187 + oy, 187 + ox, 280 + oy, 11)
-    fillQuad(100 + ox, 247 + oy, 140 + ox, 247 + oy, 146 + ox, 280 + oy, 94 + ox, 280 + oy, 12)
+    fillQuad(120 + (70 + ox - 120) * bodyZoom, 90 + (180 + oy - 90) * bodyZoom, 120 + (170 + ox - 120) * bodyZoom, 90 + (180 + oy - 90) * bodyZoom, 120 + (235 + ox - 120) * bodyZoom, 90 + (280 + oy - 90) * bodyZoom, 120 + (5 + ox - 120) * bodyZoom, 90 + (280 + oy - 90) * bodyZoom, 6)
+    fillQuad(120 + (70 + ox - 120) * bodyZoom, 90 + (180 + oy - 90) * bodyZoom, 120 + (91 + ox - 120) * bodyZoom, 90 + (180 + oy - 90) * bodyZoom, 120 + (48 + ox - 120) * bodyZoom, 90 + (280 + oy - 90) * bodyZoom, 120 + (5 + ox - 120) * bodyZoom, 90 + (280 + oy - 90) * bodyZoom, 11)
+    fillQuad(120 + (149 + ox - 120) * bodyZoom, 90 + (180 + oy - 90) * bodyZoom, 120 + (170 + ox - 120) * bodyZoom, 90 + (180 + oy - 90) * bodyZoom, 120 + (235 + ox - 120) * bodyZoom, 90 + (280 + oy - 90) * bodyZoom, 120 + (192 + ox - 120) * bodyZoom, 90 + (280 + oy - 90) * bodyZoom, 10)
+    fillQuad(120 + (91 + ox - 120) * bodyZoom, 90 + (187 + oy - 90) * bodyZoom, 120 + (149 + ox - 120) * bodyZoom, 90 + (187 + oy - 90) * bodyZoom, 120 + (187 + ox - 120) * bodyZoom, 90 + (280 + oy - 90) * bodyZoom, 120 + (53 + ox - 120) * bodyZoom, 90 + (280 + oy - 90) * bodyZoom, 3)
+    fillQuad(120 + (104 + ox - 120) * bodyZoom, 90 + (194 + oy - 90) * bodyZoom, 120 + (136 + ox - 120) * bodyZoom, 90 + (194 + oy - 90) * bodyZoom, 120 + (152 + ox - 120) * bodyZoom, 90 + (239 + oy - 90) * bodyZoom, 120 + (88 + ox - 120) * bodyZoom, 90 + (239 + oy - 90) * bodyZoom, 10)
+    terrain.drawLine(Math.round(120 + (91 + ox - 120) * bodyZoom), Math.round(90 + (187 + oy - 90) * bodyZoom), Math.round(120 + (53 + ox - 120) * bodyZoom), Math.round(90 + (280 + oy - 90) * bodyZoom), 11)
+    terrain.drawLine(Math.round(120 + (149 + ox - 120) * bodyZoom), Math.round(90 + (187 + oy - 90) * bodyZoom), Math.round(120 + (187 + ox - 120) * bodyZoom), Math.round(90 + (280 + oy - 90) * bodyZoom), 11)
+    fillQuad(120 + (100 + ox - 120) * bodyZoom, 90 + (247 + oy - 90) * bodyZoom, 120 + (140 + ox - 120) * bodyZoom, 90 + (247 + oy - 90) * bodyZoom, 120 + (146 + ox - 120) * bodyZoom, 90 + (280 + oy - 90) * bodyZoom, 120 + (94 + ox - 120) * bodyZoom, 90 + (280 + oy - 90) * bodyZoom, 12)
     for (let rivet = 0; rivet <= 5; rivet++) {
-        terrain.setPixel(Math.round(77 - rivet * 5 + ox), Math.round(188 + rivet * 13 + oy), 3)
-        terrain.setPixel(Math.round(163 + rivet * 5 + ox), Math.round(188 + rivet * 13 + oy), 3)
+        terrain.setPixel(Math.round(120 + (77 - rivet * 5 + ox - 120) * bodyZoom), Math.round(90 + (188 + rivet * 13 + oy - 90) * bodyZoom), 3)
+        terrain.setPixel(Math.round(120 + (163 + rivet * 5 + ox - 120) * bodyZoom), Math.round(90 + (188 + rivet * 13 + oy - 90) * bodyZoom), 3)
     }
-    fillQuad(117 + ox, 117 + oy, 92 + ox, 102 + oy, 47 + ox, 106 + oy, 40 + ox, 114 + oy, 6)
-    fillTriangle(40 + ox, 114 + oy, 117 + ox, 117 + oy, 117 + ox, 128 + oy, 10)
-    fillQuad(123 + ox, 117 + oy, 148 + ox, 102 + oy, 193 + ox, 106 + oy, 200 + ox, 114 + oy, 6)
-    fillTriangle(200 + ox, 114 + oy, 123 + ox, 117 + oy, 123 + ox, 128 + oy, 10)
-    fillQuad(70 + ox, 180 + oy, 114 + ox, 111 + oy, 126 + ox, 111 + oy, 170 + ox, 180 + oy, 6)
-    fillQuad(70 + ox, 180 + oy, 114 + ox, 111 + oy, 118 + ox, 111 + oy, 105 + ox, 180 + oy, 11)
-    fillQuad(126 + ox, 111 + oy, 170 + ox, 180 + oy, 140 + ox, 180 + oy, 124 + ox, 111 + oy, 10)
-    fillQuad(114 + ox, 116 + oy, 115 + ox, 79 + oy, 120 + ox, 55 + oy, 130 + ox, 116 + oy, 6)
-    fillQuad(120 + ox, 55 + oy, 126 + ox, 55 + oy, 131 + ox, 65 + oy, 130 + ox, 116 + oy, 10)
-    terrain.drawLine(124 + ox, 64 + oy, 124 + ox, 112 + oy, 3)
-    terrain.drawLine(91 + ox, 150 + oy, 149 + ox, 150 + oy, 3)
-    terrain.drawLine(80 + ox, 168 + oy, 160 + ox, 168 + oy, 3)
+    fillQuad(120 + (117 + ox - 120) * bodyZoom, 90 + (117 + oy - 90) * bodyZoom, 120 + (92 + ox - 120) * bodyZoom, 90 + (102 + oy - 90) * bodyZoom, 120 + (47 + ox - 120) * bodyZoom, 90 + (106 + oy - 90) * bodyZoom, 120 + (40 + ox - 120) * bodyZoom, 90 + (114 + oy - 90) * bodyZoom, 6)
+    fillTriangle(120 + (40 + ox - 120) * bodyZoom, 90 + (114 + oy - 90) * bodyZoom, 120 + (117 + ox - 120) * bodyZoom, 90 + (117 + oy - 90) * bodyZoom, 120 + (117 + ox - 120) * bodyZoom, 90 + (128 + oy - 90) * bodyZoom, 10)
+    fillQuad(120 + (123 + ox - 120) * bodyZoom, 90 + (117 + oy - 90) * bodyZoom, 120 + (148 + ox - 120) * bodyZoom, 90 + (102 + oy - 90) * bodyZoom, 120 + (193 + ox - 120) * bodyZoom, 90 + (106 + oy - 90) * bodyZoom, 120 + (200 + ox - 120) * bodyZoom, 90 + (114 + oy - 90) * bodyZoom, 6)
+    fillTriangle(120 + (200 + ox - 120) * bodyZoom, 90 + (114 + oy - 90) * bodyZoom, 120 + (123 + ox - 120) * bodyZoom, 90 + (117 + oy - 90) * bodyZoom, 120 + (123 + ox - 120) * bodyZoom, 90 + (128 + oy - 90) * bodyZoom, 10)
+    fillQuad(120 + (70 + ox - 120) * bodyZoom, 90 + (180 + oy - 90) * bodyZoom, 120 + (114 + ox - 120) * bodyZoom, 90 + (111 + oy - 90) * bodyZoom, 120 + (126 + ox - 120) * bodyZoom, 90 + (111 + oy - 90) * bodyZoom, 120 + (170 + ox - 120) * bodyZoom, 90 + (180 + oy - 90) * bodyZoom, 6)
+    fillQuad(120 + (70 + ox - 120) * bodyZoom, 90 + (180 + oy - 90) * bodyZoom, 120 + (114 + ox - 120) * bodyZoom, 90 + (111 + oy - 90) * bodyZoom, 120 + (118 + ox - 120) * bodyZoom, 90 + (111 + oy - 90) * bodyZoom, 120 + (105 + ox - 120) * bodyZoom, 90 + (180 + oy - 90) * bodyZoom, 11)
+    fillQuad(120 + (126 + ox - 120) * bodyZoom, 90 + (111 + oy - 90) * bodyZoom, 120 + (170 + ox - 120) * bodyZoom, 90 + (180 + oy - 90) * bodyZoom, 120 + (140 + ox - 120) * bodyZoom, 90 + (180 + oy - 90) * bodyZoom, 120 + (124 + ox - 120) * bodyZoom, 90 + (111 + oy - 90) * bodyZoom, 10)
+    fillQuad(120 + (114 + ox - 120) * bodyZoom, 90 + (116 + oy - 90) * bodyZoom, 120 + (115 + ox - 120) * bodyZoom, 90 + (79 + oy - 90) * bodyZoom, 120 + (120 + ox - 120) * bodyZoom, 90 + (55 + oy - 90) * bodyZoom, 120 + (130 + ox - 120) * bodyZoom, 90 + (116 + oy - 90) * bodyZoom, 6)
+    fillQuad(120 + (120 + ox - 120) * bodyZoom, 90 + (55 + oy - 90) * bodyZoom, 120 + (126 + ox - 120) * bodyZoom, 90 + (55 + oy - 90) * bodyZoom, 120 + (131 + ox - 120) * bodyZoom, 90 + (65 + oy - 90) * bodyZoom, 120 + (130 + ox - 120) * bodyZoom, 90 + (116 + oy - 90) * bodyZoom, 10)
+    terrain.drawLine(Math.round(120 + (124 + ox - 120) * bodyZoom), Math.round(90 + (64 + oy - 90) * bodyZoom), Math.round(120 + (124 + ox - 120) * bodyZoom), Math.round(90 + (112 + oy - 90) * bodyZoom), 3)
+    terrain.drawLine(Math.round(120 + (91 + ox - 120) * bodyZoom), Math.round(90 + (150 + oy - 90) * bodyZoom), Math.round(120 + (149 + ox - 120) * bodyZoom), Math.round(90 + (150 + oy - 90) * bodyZoom), 3)
+    terrain.drawLine(Math.round(120 + (80 + ox - 120) * bodyZoom), Math.round(90 + (168 + oy - 90) * bodyZoom), Math.round(120 + (160 + ox - 120) * bodyZoom), Math.round(90 + (168 + oy - 90) * bodyZoom), 3)
     for (let rivet2 = 0; rivet2 <= 6; rivet2++) {
-        terrain.setPixel(Math.round(95 + rivet2 * 8 + ox), Math.round(153 + oy), 3)
+        terrain.setPixel(Math.round(120 + (95 + rivet2 * 8 + ox - 120) * bodyZoom), Math.round(90 + (153 + oy - 90) * bodyZoom), 3)
     }
 }
 function updateEnemyFiring () {
@@ -891,8 +902,10 @@ let y2 = 0
 let horizon = 0
 let edgeY = 0
 let edgeX = 0
+let zooming = false
 let oy = 0
 let ox = 0
+let bodyZoom = 0
 let pixelY2 = 0
 let pixelX2 = 0
 let pixelColor2 = 0
@@ -941,15 +954,15 @@ let endY = 0
 let endX = 0
 let fraction = 0
 let steps = 0
-let mouseDeltaY = 0
-let mouseDeltaX = 0
-let mouseInitialized = false
 let frontX = 0
 let middleX = 0
 let rearX = 0
 let side = 0
 let gy = 0
 let gx = 0
+let mouseInitialized = false
+let mouseDeltaY = 0
+let mouseDeltaX = 0
 let hitHeight = 0
 let hitWidth = 0
 let enemyScale = 0
@@ -1040,7 +1053,6 @@ let bombReleased = false
 let targetYaw = 0
 let targetPitch = 0
 let targetRoll = 0
-let pilotState = 0
 let enemyNearby = false
 let pilotTimer = 0
 let aircraftPitch = 0
@@ -1071,12 +1083,14 @@ let previousMouseY = 0
 let previousMouseX = 0
 let mouseY = 0
 let mouseX = 0
+let normalZoom = 0
 let focalLength = 0
 let targetSpeed = 0
 let cruiseSpeed = 0
 let pilotResponsiveness = 0
 let maneuverDirection = 0
 let nextManeuver = 0
+let pilotState = 0
 let explosionDelay = 0
 let carrierZ = 0
 let carrierY = 0
@@ -1128,12 +1142,16 @@ carrierX = 160
 carrierY = 400
 carrierZ = -80
 explosionDelay = 8
+pilotState = 3
 nextManeuver = randint(15000, 30000)
 maneuverDirection = 1
 pilotResponsiveness = 0.035
 cruiseSpeed = 200
 targetSpeed = 200
 focalLength = 120
+normalZoom = 120
+let aimingZoom = 240
+let zoomSpeed = 0.15
 mouseX = 120
 mouseY = 90
 previousMouseX = 120
@@ -1207,6 +1225,11 @@ for (let enemyIndex3 = 0; enemyIndex3 <= enemyCount - 1; enemyIndex3++) {
     spawnEnemy(enemyIndex3)
 }
 game.onUpdate(function () {
+    if (zooming) {
+        focalLength += (aimingZoom - focalLength) * zoomSpeed
+    } else {
+        focalLength += (normalZoom - focalLength) * zoomSpeed
+    }
     cameraVelocityX += mouseDeltaX * (mouseSensitivity + Math.abs(mouseDeltaX) * mouseAcceleration)
     cameraVelocityY += mouseDeltaY * (mouseSensitivity + Math.abs(mouseDeltaY) * mouseAcceleration)
     cameraVelocityX = Math.max(-6, Math.min(6, cameraVelocityX))
@@ -1229,8 +1252,8 @@ game.onUpdate(function () {
     edgeY = Math.max(-1, Math.min(1, edgeY))
     edgeX = edgeX * Math.abs(edgeX)
     edgeY = edgeY * Math.abs(edgeY)
-    cameraYaw += cameraVelocityX + edgeX * edgeTurnSpeed
-    cameraPitch += cameraVelocityY + edgeY * edgeTurnSpeed
+    cameraYaw += (cameraVelocityX + edgeX * edgeTurnSpeed) * normalZoom / focalLength
+    cameraPitch += (cameraVelocityY + edgeY * edgeTurnSpeed) * normalZoom / focalLength
     cameraYaw = Math.max(-80, Math.min(80, cameraYaw))
     cameraPitch = Math.max(-45, Math.min(45, cameraPitch))
     cameraVelocityX *= cameraFriction
@@ -1244,6 +1267,11 @@ forever(function () {
         firing = true
     } else {
         firing = false
+    }
+    if (browserEvents.MouseRight.isPressed()) {
+        zooming = true
+    } else {
+        zooming = false
     }
     pause(10)
 })
