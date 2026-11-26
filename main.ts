@@ -786,6 +786,9 @@ function updateBombingMission () {
         }
     }
 }
+browserEvents.MouseRight.onEvent(browserEvents.MouseButtonEvent.Pressed, function (x, y) {
+    zooming = !(zooming)
+})
 function renderEnemyBullets () {
     yawRadians3 = getViewYaw() * Math.PI / 180
     pitchRadians3 = (0 - Math.max(-80, Math.min(80, getViewPitch()))) * Math.PI / 180
@@ -883,7 +886,7 @@ function updateEnemyFiring () {
     for (let k = 0; k <= enemyCount - 1; k++) {
         if (enemyHealth[k] > 0 && enemyBreakingAway[k] == 0) {
             enemyFireTimer[k] -= 33
-if (enemyZ[k] < 900 && enemyZ[k] > 180 && enemyFireTimer[k] <= 0) {
+if (enemyZ[k] < 1800 && enemyZ[k] > 180 && enemyFireTimer[k] <= 0) {
                 enemyBulletX.push(enemyX[k])
                 enemyBulletY.push(enemyY[k])
                 enemyBulletZ.push(enemyZ[k])
@@ -902,7 +905,6 @@ let y2 = 0
 let horizon = 0
 let edgeY = 0
 let edgeX = 0
-let zooming = false
 let oy = 0
 let ox = 0
 let bodyZoom = 0
@@ -926,6 +928,7 @@ let sinYaw3 = 0
 let cosYaw3 = 0
 let pitchRadians3 = 0
 let yawRadians3 = 0
+let zooming = false
 let cloudScale = 0
 let cloudScreenY = 0
 let cloudScreenX = 0
@@ -1058,79 +1061,79 @@ let maneuverDirection = 0
 let nextManeuver = 0
 let pilotState = 0
 let explosionDelay = 0
-let tilt = 0
-let enemyTurnTime: number[] = []
-let explosionTime = 0
-let cameraVelocityX = 0
-let cameraVelocityY = 0
-let cloudZ: number[] = []
-let gunRecoil = 0
-let gunsBlocked = false
-let bulletX: number[] = []
-let bulletY: number[] = []
-let bulletDepth: number[] = []
-let bulletYaw: number[] = []
-let bulletPitch: number[] = []
-let enemyX: number[] = []
-let enemyY: number[] = []
-let enemyZ: number[] = []
-let enemySpeed: number[] = []
-let enemyPhase: number[] = []
-let enemyHealth: number[] = []
-let enemyCrashTime: number[] = []
-let enemyRoll: number[] = []
-let enemyCrashDirection: number[] = []
-let smokeX: number[] = []
-let smokeY: number[] = []
-let smokeZ: number[] = []
-let smokeAge: number[] = []
-let enemyFireTimer: number[] = []
-let enemyTime = 0
-let damageFlash = 0
-let enemiesDestroyed = 0
-let enemyBulletX: number[] = []
-let enemyBulletY: number[] = []
-let enemyBulletZ: number[] = []
-let speed = 0
-let terrain: Image = null
-let aircraftLayer: Image = null
-let carrierX = 0
-let carrierY = 0
-let carrierZ = 0
-let focalLength = 0
-let aircraftHealth = 0
-let cloudImage: Image = null
-let enemyImage: Image = null
-let cosine = 0
-let sine = 0
-let w = 0
-let h = 0
-let radius = 0
-let aimX = 0
-let aimY = 0
-let sightX = 0
-let sightY = 0
-let fx2 = 0
-let radius2 = 0
-let fireballY = 0
-let whiteRadius = 0
-let cosine2 = 0
-let sine2 = 0
-let a = 0
-let o = 0
-let radius3 = 0
-let sx3 = 0
-let sy3 = 0
-let s = 0
-let cyaw = 0
-let syaw = 0
-let cpitch = 0
-let spitch = 0
-let hitEnemy = 0
-let crashTime = 0
-let direction = 0
-let turnProgress = 0
 let targetBank = 0
+let turnProgress = 0
+let direction = 0
+let crashTime = 0
+let hitEnemy = 0
+let spitch = 0
+let cpitch = 0
+let syaw = 0
+let cyaw = 0
+let s = 0
+let sy3 = 0
+let sx3 = 0
+let radius3 = 0
+let o = 0
+let a = 0
+let sine2 = 0
+let cosine2 = 0
+let whiteRadius = 0
+let fireballY = 0
+let radius2 = 0
+let fx2 = 0
+let sightY = 0
+let sightX = 0
+let aimY = 0
+let aimX = 0
+let radius = 0
+let h = 0
+let w = 0
+let sine = 0
+let cosine = 0
+let enemyImage: Image = null
+let cloudImage: Image = null
+let aircraftHealth = 0
+let focalLength = 0
+let carrierZ = 0
+let carrierY = 0
+let carrierX = 0
+let aircraftLayer: Image = null
+let terrain: Image = null
+let speed = 0
+let enemyBulletZ: number[] = []
+let enemyBulletY: number[] = []
+let enemyBulletX: number[] = []
+let enemiesDestroyed = 0
+let damageFlash = 0
+let enemyTime = 0
+let enemyFireTimer: number[] = []
+let smokeAge: number[] = []
+let smokeZ: number[] = []
+let smokeY: number[] = []
+let smokeX: number[] = []
+let enemyCrashDirection: number[] = []
+let enemyRoll: number[] = []
+let enemyCrashTime: number[] = []
+let enemyHealth: number[] = []
+let enemyPhase: number[] = []
+let enemySpeed: number[] = []
+let enemyZ: number[] = []
+let enemyY: number[] = []
+let enemyX: number[] = []
+let bulletPitch: number[] = []
+let bulletYaw: number[] = []
+let bulletDepth: number[] = []
+let bulletY: number[] = []
+let bulletX: number[] = []
+let gunsBlocked = false
+let gunRecoil = 0
+let cloudZ: number[] = []
+let cameraVelocityY = 0
+let cameraVelocityX = 0
+let explosionTime = 0
+let enemyTurnTime: number[] = []
+let tilt = 0
 namespace userconfig {
     export const ARCADE_SCREEN_WIDTH = 240
     export const ARCADE_SCREEN_HEIGHT = 180
@@ -1265,11 +1268,6 @@ mouseDeltaX = 0
 forever(function () {
     firing = browserEvents.MouseLeft.isPressed()
     pause(10)
-})
-
-
-browserEvents.MouseRight.onEvent(browserEvents.MouseButtonEvent.Pressed, function () {
-    zooming = !zooming
 })
 game.onUpdateInterval(33, function () {
     terrain.fill(9)
